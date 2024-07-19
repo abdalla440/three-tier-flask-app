@@ -1,6 +1,6 @@
 import unittest
 import json
-from app import app, client, db, collection
+from ..app import app, client, db, collection
 from bson.objectid import ObjectId
 
 class TestNoteApp(unittest.TestCase):
