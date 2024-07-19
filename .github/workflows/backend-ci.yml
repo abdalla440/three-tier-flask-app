@@ -47,9 +47,25 @@ jobs:
         
     - name: App Unittests
       run:  python test_app.py
-  
-  publish-app:
+
+
+  app-sonarcloud-scan:
     needs: app-unit-test
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code 
+        uses: actions/checkout@v4
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env: 
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+
+
+  publish-app:
+    needs: app-sonarcloud-scan
     runs-on: ubuntu-latest
 
     steps:
