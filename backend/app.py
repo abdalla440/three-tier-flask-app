@@ -1,13 +1,17 @@
 from flask import Flask, request, jsonify
-from flask_pymongo import PyMongo
+from pymongo.mongo_client import MongoClient
 from bson.objectid import ObjectId
 from flask_cors import CORS
 
 # Initialize Flask application
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb+srv://ahannora440:Hannora123456@hannoratestcluster.xrtt2dn.mongodb.net/?retryWrites=true&w=majority&appName=hannoraTestCluster"
 
-mongo = PyMongo(app)
+# MongoDB URI
+mongo_uri = "mongodb+srv://ahannora:AdminMONGO123@notes-cluster.erkitpg.mongodb.net/?retryWrites=true&w=majority&appName=notes-Cluster"
+client = MongoClient(mongo_uri)
+db = client['notes']
+collection = db['test']
+
 CORS(app)
 
 @app.route('/notes', methods=['POST'])
@@ -18,7 +22,7 @@ def add_note():
     Returns the ID of the inserted note.
     """
     note = request.json['note']
-    note_id = mongo.db.notes.insert_one({'note': note}).inserted_id
+    note_id = collection.insert_one({'note': note}).inserted_id
     return jsonify(str(note_id)), 201
 
 @app.route('/notes', methods=['GET'])
@@ -27,12 +31,11 @@ def get_notes():
     Retrieve all notes from the MongoDB database.
     Returns a list of notes.
     """
-    notes = mongo.db.notes.find()
+    notes = collection.find()
     result = []
     for note in notes:
         result.append({'_id': str(note['_id']), 'note': note['note']})
     return jsonify(result)
-
 
 @app.route('/notes/<id>', methods=['DELETE'])
 def delete_note(id):
@@ -40,17 +43,10 @@ def delete_note(id):
     Delete a note from the MongoDB database using its ID.
     Returns no content.
     """
-    mongo.db.notes.delete_one({'_id': ObjectId(id)})
+    collection.delete_one({'_id': ObjectId(id)})
     return '', 204
 
-@app.route('/hannora', methods=['GET'])
-def hannora():
-    """
-    Returns 'Hello World' as a response.
-    """
-    return 'Hello World', 200
-
-@app.route('/test-db', methods=['GET'])
+@app.route('/ping', methods=['GET'])
 def test_db_connection():
     """
     Test the connection to the MongoDB database.
@@ -58,8 +54,8 @@ def test_db_connection():
     """
     try:
         # Try to get a collection name as a way to test the connection
-        mongo.db.list_collection_names()
-        return 'Database connection successful', 200
+        db.list_collection_names()
+        return 'Database connection successful ... PONG ^_^', 200
     except Exception as e:
         return str(e), 500
 

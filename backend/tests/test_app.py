@@ -1,6 +1,6 @@
 import unittest
 import json
-from app import app, mongo
+from app import app, client, db, collection
 from bson.objectid import ObjectId
 
 class TestNoteApp(unittest.TestCase):
@@ -14,8 +14,8 @@ class TestNoteApp(unittest.TestCase):
         """
         self.app = app.test_client()
         self.app.testing = True
-        self.mongo = mongo.db
-        self.mongo.notes.drop()
+        self.collection = db['test']
+        self.collection.drop()
 
     def test_add_note(self):
         """
@@ -30,7 +30,7 @@ class TestNoteApp(unittest.TestCase):
         """
         Test retrieving all notes.
         """
-        self.mongo.notes.insert_one({'note': 'Test Note'})
+        self.collection.insert_one({'note': 'Test Note'})
         response = self.app.get('/notes')
         data = json.loads(response.get_data())
         self.assertEqual(response.status_code, 200)
@@ -41,10 +41,10 @@ class TestNoteApp(unittest.TestCase):
         """
         Test deleting a note by ID.
         """
-        note_id = self.mongo.notes.insert_one({'note': 'Test Note'}).inserted_id
+        note_id = self.collection.insert_one({'note': 'Test Note'}).inserted_id
         response = self.app.delete(f'/notes/{note_id}')
         self.assertEqual(response.status_code, 204)
-        notes = list(self.mongo.notes.find())
+        notes = list(self.collection.find())
         self.assertEqual(len(notes), 0)
 
 if __name__ == '__main__':
