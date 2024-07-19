@@ -50,7 +50,7 @@ jobs:
 
 
   app-sonarcloud-scan:
-    needs: app-unit-test
+    # needs: app-unit-test
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
