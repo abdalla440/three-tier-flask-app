@@ -29,5 +29,5 @@ jobs:
     - run: pip install -r requirements.txt  # install requirements to enable GitHub run tests
     
     - run:  python test_app.py
-      working-directory: ./backend/tests
+      # working-directory: ./backend/tests
 
