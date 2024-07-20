@@ -5,6 +5,8 @@ from flask_cors import CORS
 
 # Initialize Flask application
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "False"}}) # Compliant
+app.config['WTF_CSRF_ENABLED'] = False # Sensitive
 
 # MongoDB URI
 mongo_uri = "mongodb+srv://ahannora:AdminMONGO123@notes-cluster.erkitpg.mongodb.net/?retryWrites=true&w=majority&appName=notes-Cluster"
@@ -12,7 +14,6 @@ client = MongoClient(mongo_uri)
 db = client['notes']
 collection = db['test']
 
-CORS(app)
 
 @app.route('/notes', methods=['POST'])
 def add_note():
@@ -61,4 +62,4 @@ def test_db_connection():
 
 if __name__ == '__main__':
     # Run the Flask application
-    app.run(debug=True, host='0.0.0.0')
+    app.run(host='0.0.0.0')
