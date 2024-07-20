@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from pymongo.mongo_client import MongoClient
 from bson.objectid import ObjectId
 from flask_cors import CORS
+from cryptography.fernet import Fernet
 
 # Initialize Flask application
 app = Flask(__name__)
@@ -9,7 +10,7 @@ CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "False"}}) # Compl
 app.config['WTF_CSRF_ENABLED'] = False # Sensitive
 
 # MongoDB URI
-mongo_uri = "mongodb+srv://ahannora:AdminMONGO123@notes-cluster.erkitpg.mongodb.net/?retryWrites=true&w=majority&appName=notes-Cluster"
+mongo_uri = "gAAAAABmnBZMSaeGsjpLdn4TeYR5MKdttZxTpDCOhxKatdi1-J5lYAL7h_O30VLCE_y3AiAyCcSHIIHy-tqSJ_V_dHrkL3YesiqcHHaPvsZwd_1xIItJZv29GuGty6W0PfCAkpAQpVaoKHybR4lAL6BwPKB_wJh0lV-bO2rtrUPdwxe5MF_GqA8cnlfqcuWZC5ZGuKPf1zlEtOT_j-8Rf9R1wzJo9KdjkttX_u3LF22g1yzybdpx03U="
 client = MongoClient(mongo_uri)
 db = client['notes']
 collection = db['test']
