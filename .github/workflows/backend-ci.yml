@@ -57,21 +57,14 @@ jobs:
       - name: Checkout Code 
         uses: actions/checkout@v4
 
-      # Setup sonar-scanner
+       # Setup sonar-scanner
       - name: Setup SonarQube
         uses: warchant/setup-sonar-scanner@v8
 
       - name: Run SonarCloud scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          sonar-scanner \
-          -Dsonar.projectKey=my_project_key \
-          -Dsonar.organization=my_organization_key \
-          -Dsonar.sources=. \
-          -Dsonar.projectVersion=1.0 \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        run: sonar-scanner -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
   publish-app:
     needs: app-sonarcloud-scan
