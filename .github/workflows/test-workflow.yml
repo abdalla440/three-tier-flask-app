@@ -1,0 +1,59 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r backend/requirements.txt
+
+    - name: Run tests
+      run: |
+        pytest --cov=backend > result.log
+        cat result.log
+
+    - name: Generate coverage report
+      run: |
+        pytest --cov=backend --cov-report=xml:coverage.xml
+
+    - name: Upload coverage to SonarCloud
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        sonar-scanner \
+          -Dsonar.projectKey=hannora-sonar-org_falsk-app \
+          -Dsonar.organization=hannora-sonar-org \
+          -Dsonar.sources=backend \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+          -Dsonar.python.coverage.reportPaths=coverage.xml
+
+    - name: Deploy with Gunicorn
+      run: |
+        pip install gunicorn
+        gunicorn --bind 0.0.0.0:8000 backend:app
