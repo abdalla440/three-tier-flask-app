@@ -84,7 +84,8 @@ jobs:
       with:
         # args: backend --severity-threshold=high --sarif-file-output=snyk.sarif
         # args: --sarif-file-output=snyk.sarif
-        working-directory: ./backend
+        # working-directory: ./backend
+        context: ./backend
 
     # - name: Upload result to GitHub Code Scanning
     #   uses: github/codeql-action/upload-sarif@v2
