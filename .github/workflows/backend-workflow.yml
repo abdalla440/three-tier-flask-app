@@ -18,7 +18,7 @@ jobs:
         with:
           args: --severity-threshold=high
           command: monitor
-          working-directory: ./backend
+          entryPoint: ./backend
 # jobs:
 #   app-sonarcloud-scan:
 #     name: SonarCloud
