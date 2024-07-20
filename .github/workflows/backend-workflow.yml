@@ -28,9 +28,9 @@ jobs:
         uses: snyk/actions/python@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: backend --severity-threshold=high
-          command: monitor
+        # with:
+        #   args: backend --severity-threshold=high
+        #   command: monitor
 
 
 # jobs:
