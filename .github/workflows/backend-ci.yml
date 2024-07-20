@@ -71,6 +71,7 @@ jobs:
           -Dsonar.sources=. \
           -Dsonar.projectVersion=1.0 \
           -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.qualitygate.wait=true \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
   publish-app:
