@@ -16,7 +16,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=high
+          args: backend --severity-threshold=high
           command: monitor
           # entryPoint: ./backend
 # jobs:
