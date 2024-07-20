@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches: 
-      - main
+      - master
     # paths: 
     #   - backend/**
   
@@ -36,19 +36,26 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install -r requirements.txt
 
+    - name: Run Tests with Coverage
+      run: |
+        source venv/bin/activate
+        pytest --cov=./ --cov-report=xml --cov-report=html
+  
     - name: Print debugging information 
       run: |
         echo "Python Version: $(python --version)"
         echo "Working Directory: $(pwd)"
         echo "Contents of Working Directory: $(ls -l)"
         echo "Contents of site-packages: $(ls -l venv/lib/python*/site-packages)"
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: coverage.xml
+
         
-    - name: App Unittests
-      run:  python test_app.py
-
-
   app-sonarcloud-scan:
     needs: app-unit-test
     name: SonarCloud
