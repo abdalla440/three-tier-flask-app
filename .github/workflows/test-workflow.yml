@@ -51,5 +51,17 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
-        sonar-scanner 
+        sonar-scanner \
+          -Dsonar.projectKey=hannora-sonar-org_falsk-app \
+          -Dsonar.organization=hannora-sonar-org \
+          -Dsonar.sources=backend \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+          -Dsonar.python.coverage.reportPaths=coverage.xml
+          -Dsonar.python.version=3.12.4
 
+
+    # - name: Deploy with Gunicorn
+    #   run: |
+    #     pip install gunicorn
+    #     gunicorn --bind 0.0.0.0:8000 backend:app
