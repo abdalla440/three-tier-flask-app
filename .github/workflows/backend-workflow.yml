@@ -83,13 +83,13 @@ jobs:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
         # args: backend --severity-threshold=high --sarif-file-output=snyk.sarif
-        args: --sarif-file-output=snyk.sarif
+        # args: --sarif-file-output=snyk.sarif
         working-directory: ./backend
 
-    - name: Upload result to GitHub Code Scanning
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif_file: snyk.sarif
+    # - name: Upload result to GitHub Code Scanning
+    #   uses: github/codeql-action/upload-sarif@v2
+    #   with:
+    #     sarif_file: snyk.sarif
 
 
   publish-app:
