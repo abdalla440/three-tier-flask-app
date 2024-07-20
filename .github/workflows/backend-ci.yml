@@ -4,12 +4,9 @@ on:
   push:
     branches: 
       - master
-    # paths: 
-    #   - backend/**
   
 # allows you to manually execute this pipeline from the Actions tab.
 # workflow_dispatch:
-
 
 defaults:
  run:
@@ -36,6 +33,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        python -m pip install -r requirements.txt
 
     - name: Run Tests with Coverage
       run: |
@@ -55,7 +53,6 @@ jobs:
         name: coverage-report
         path: coverage.xml
 
-        
   app-sonarcloud-scan:
     needs: app-unit-test
     name: SonarCloud
@@ -64,7 +61,13 @@ jobs:
       - name: Checkout Code 
         uses: actions/checkout@v4
 
-       # Setup sonar-scanner
+      - name: Download coverage report
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-report
+          path: ./backend
+
+      # Setup sonar-scanner
       - name: Setup SonarQube
         uses: warchant/setup-sonar-scanner@v8
 
@@ -79,6 +82,7 @@ jobs:
           -Dsonar.projectVersion=1.0 \
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.qualitygate.wait=true \
+          -Dsonar.coverageReportPaths=coverage.xml \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
   publish-app:
@@ -89,20 +93,16 @@ jobs:
     - name: Checkout Code 
       uses: actions/checkout@v4
 
-    -
-      name: Set up QEMU
+    - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
-    -
-      name: Set up Docker Buildx
+    - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
-    -
-      name: Login to Docker Hub
+    - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    -
-      name: Build and push
+    - name: Build and push
       uses: docker/build-push-action@v6
       with:
         context: ./backend
