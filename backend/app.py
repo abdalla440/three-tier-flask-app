@@ -22,9 +22,14 @@ def add_note():
     Request should contain JSON with a 'note' field.
     Returns the ID of the inserted note.
     """
-    note = request.json['note']
+    try:
+        note = request.json['note']
+    except KeyError:
+        return jsonify({"error": "Invalid data, 'note' field is required"}), 400
+    
     note_id = collection.insert_one({'note': note}).inserted_id
     return jsonify(str(note_id)), 201
+
 
 @app.route('/notes', methods=['GET'])
 def get_notes():
