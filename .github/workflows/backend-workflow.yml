@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   app-sonarcloud-scan:
@@ -61,6 +58,7 @@ jobs:
           -Dsonar.python.coverage.reportPaths=coverage.xml
 
 
+          
         
   publish-app:
     needs: app-sonarcloud-scan
