@@ -1,15 +1,20 @@
-version: '3.8'
+version: "3.9"
 
 services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:80"
+      - "3000:3000"  # Map React's port to host port 3000
+    depends_on:
+      - backend
+
   backend:
     build: ./backend
     ports:
-      - "5000:5000"
-  mongo:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
+      - "5000:5000"  # Map Flask's port to host port 5000
+    environment:
+      - MONGO_URI=mongodb+srv://ahannora:AdminMONGO123@notes-cluster.erkitpg.mongodb.net/?retryWrites=true&w=majority&appName=notes-Cluster
+
+networks:
+  default:
+    driver: bridge

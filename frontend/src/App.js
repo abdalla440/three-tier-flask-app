@@ -1,60 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import NoteTable from './components/NoteTable';
+import NoteForm from './components/NoteForm';
+import { Container, Typography } from '@mui/material';
 
-/**
- * App component represents the main Note App.
- * It allows users to add, view, and delete notes.
- */
-function App() {
+const App = () => {
   const [notes, setNotes] = useState([]);
-  const [note, setNote] = useState('');
 
-  // Fetch notes from the backend when the component mounts
   useEffect(() => {
-    axios.get('http://localhost:5000/notes').then(response => {
-      setNotes(response.data);
-    });
+    const fetchNotes = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/notes');
+        setNotes(response.data);
+      } catch (error) {
+        console.error("There was an error fetching the notes!", error);
+      }
+    };
+
+    fetchNotes();
   }, []);
 
-  /**
-   * Add a new note by sending a POST request to the backend.
-   */
-  const addNote = () => {
-    axios.post('http://localhost:5000/notes', { note }).then(response => {
-      setNotes([...notes, { _id: response.data, note }]);
-      setNote('');
-    });
-  };
-
-  /**
-   * Delete a note by sending a DELETE request to the backend.
-   * @param {string} id - The ID of the note to delete.
-   */
-  const deleteNote = (id) => {
-    axios.delete(`http://localhost:5000/notes/${id}`).then(() => {
-      setNotes(notes.filter(note => note._id !== id));
-    });
-  };
-
   return (
-    <div>
-      <h1>Note App</h1>
-      <input 
-        type="text" 
-        value={note} 
-        onChange={e => setNote(e.target.value)} 
-      />
-      <button onClick={addNote}>Add Note</button>
-      <ul>
-        {notes.map(note => (
-          <li key={note._id}>
-            {note.note} 
-            <button onClick={() => deleteNote(note._id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Container>
+      <Typography variant="h3" align="center" gutterBottom>
+        Note Taking App
+      </Typography>
+      <NoteForm setNotes={setNotes} />
+      <NoteTable notes={notes} setNotes={setNotes} />
+    </Container>
   );
-}
+};
 
 export default App;

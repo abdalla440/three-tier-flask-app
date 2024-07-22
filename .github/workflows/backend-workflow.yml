@@ -4,8 +4,9 @@ on:
   push:
     branches:
       - main
-
-
+    paths: 
+      - backend/**
+    
 jobs:
   security:
     runs-on: ubuntu-latest
