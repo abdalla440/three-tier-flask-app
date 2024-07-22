@@ -6,7 +6,7 @@ from flask_cors import CORS
 # Initialize Flask application
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "False"}}) # Compliant
-app.config['WTF_CSRF_ENABLED'] = False # Sensitive
+app.config['WTF_CSRF_ENABLED'] = True 
 
 # MongoDB URI
 mongo_uri = "mongodb+srv://ahannora:AdminMONGO123@notes-cluster.erkitpg.mongodb.net/?retryWrites=true&w=majority&appName=notes-Cluster"
