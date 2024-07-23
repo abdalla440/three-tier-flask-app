@@ -4,17 +4,25 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:3000"  # Map React's port to host port 3000
+      - "3000:3000"
     depends_on:
       - backend
-
   backend:
     build: ./backend
     ports:
-      - "5000:5000"  # Map Flask's port to host port 5000
+      - "5000:5000"
+    depends_on:
+      - database
     environment:
-      - MONGO_URI=mongodb+srv://ahannora:AdminMONGO123@notes-cluster.erkitpg.mongodb.net/?retryWrites=true&w=majority&appName=notes-Cluster
-
-networks:
-  default:
-    driver: bridge
+      - MONGO_URI=mongodb://database:27017
+    links:
+        - database
+  database:
+    image: mongo:latest
+    hostname: notes_mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=notes_db
+      - MONGO_INITDB_ROOT_USERNAME=hannora
+      - MONGO_INITDB_ROOT_PASSWORD=hannora123

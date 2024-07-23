@@ -9,8 +9,13 @@ CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "False"}}) # Compl
 app.config['WTF_CSRF_ENABLED'] = True 
 
 # MongoDB URI
-mongo_uri = "mongodb+srv://ahannora:AdminMONGO123@notes-cluster.erkitpg.mongodb.net/?retryWrites=true&w=majority&appName=notes-Cluster"
-client = MongoClient(mongo_uri)
+client = MongoClient(
+            host= 'notes_mongodb',
+            port= 27017, 
+            username='hannora', 
+            password='hannora123',
+            authSource="admin"
+    )
 db = client['notes']
 collection = db['test']
 
@@ -52,19 +57,16 @@ def delete_note(id):
     collection.delete_one({'_id': ObjectId(id)})
     return '', 204
 
+    
+# Modified route to print database info
 @app.route('/ping', methods=['GET'])
 def test_db_connection():
-    """
-    Test the connection to the MongoDB database.
-    Returns a success message if the connection is successful.
-    """
     try:
-        # Try to get a collection name as a way to test the connection
-        db.list_collection_names()
-        return 'Database connection successful ... PONG ^_^', 200
+        # Get database information
+        db_info = client.server_info()
+        return jsonify(db_info), 200
     except Exception as e:
-        return str(e), 500
-
+        return jsonify({'error': str(e)}), 500
 # if __name__ == '__main__':
 #     # Run the Flask application
 #     app.run(host='0.0.0.0',port=5000)
