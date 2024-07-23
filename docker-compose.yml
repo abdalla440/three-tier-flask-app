@@ -7,6 +7,7 @@ services:
       - "3000:3000"
     depends_on:
       - backend
+
   backend:
     build: ./backend
     ports:
@@ -17,12 +18,13 @@ services:
       - MONGO_URI=mongodb://database:27017
     links:
         - database
+  
   database:
     image: mongo:latest
     hostname: notes_mongodb
     ports:
       - "27017:27017"
     environment:
-      - MONGO_INITDB_DATABASE=notes_db
+      - MONGO_INITDB_DATABASE=notes
       - MONGO_INITDB_ROOT_USERNAME=hannora
       - MONGO_INITDB_ROOT_PASSWORD=hannora123
